@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cryptonest - Decentralized Exchange</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .animate-pulse-slow {
+            animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        .swap-card {
+            backdrop-filter: blur(10px);
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .token-input {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        .token-dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            width: 100%;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 10;
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .token-dropdown.show {
+            display: block;
+        }
+        .token-option {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+        }
+        .token-option:hover {
+            background-color: #f0fdf4;
+        }
+        .token-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 0.75rem;
+            border-radius: 50%;
+        }
+        .selected-token-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 0.5rem;
+            border-radius: 50%;
+        }
+        .ghost-button {
+            background-color: transparent !important;
+            border: 1px solid #22c55e !important;
+            color: #22c55e !important;
+            cursor: not-allowed !important;
+            opacity: 0.7 !important;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-white text-gray-800 font-sans">
+    <!-- Header -->
+    <header class="container mx-auto px-4 py-6 flex justify-between items-center">
+        <div class="flex items-center space-x-2">
+            <h1 class="text-2xl font-bold">Cryptonest</h1>
+        </div>
+        <nav class="hidden md:flex space-x-6">
+            <a href="#" class="hover:text-green-600 transition">Swap</a>
+            <a href="#" class="hover:text-green-600 transition">Liquidity</a>
+            <a href="#" class="hover:text-green-600 transition">Farms</a>
+            <a href="#" class="hover:text-green-600 transition">Analytics</a>
+        </nav>
+        <button class="md:hidden text-2xl">
+            <i class="fas fa-bars"></i>
+        </button>
+        <button class="hidden md:block bg-green-600 hover:bg-green-700 px-4 py-2 rounded-full font-medium transition text-white">
+            Connect Wallet
+        </button>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8 flex flex-col items-center">
+        <!-- Swap Card -->
+        <div class="swap-card w-full max-w-md rounded-2xl p-6 shadow-xl border border-green-400/20 bg-white">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold">Swap Tokens</h2>
+                <div class="flex space-x-2">
+                    <button class="p-2 rounded-full hover:bg-green-500/20 transition">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                    <button class="p-2 rounded-full hover:bg-green-500/20 transition">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- From Token -->
+            <div class="token-input rounded-xl p-4 mb-4 bg-white border border-green-200">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-sm text-green-600">From</span>
+                    <span class="text-sm">Balance: 0.0</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <input type="number" placeholder="0.0" class="bg-transparent text-2xl w-full outline-none" id="fromAmount">
+                    <div class="relative">
+                        <button class="flex items-center space-x-2 bg-green-600/30 px-3 py-2 rounded-lg text-green-800" id="fromTokenButton">
+                            <img src="https://cryptologos.cc/logos/ethereum-eth-logo.svg" class="selected-token-icon" id="fromTokenIcon">
+                            <span id="fromToken">ETH</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="token-dropdown" id="fromTokenDropdown">
+                            <div class="token-option" data-token="ETH" data-icon="https://cryptologos.cc/logos/ethereum-eth-logo.svg">
+                                <img src="https://cryptologos.cc/logos/ethereum-eth-logo.svg" class="token-icon">
+                                <span>Ethereum</span>
+                            </div>
+                            <div class="token-option" data-token="BTC" data-icon="https://cryptologos.cc/logos/bitcoin-btc-logo.svg">
+                                <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.svg" class="token-icon">
+                                <span>Bitcoin</span>
+                            </div>
+                            <div class="token-option" data-token="USDT" data-icon="https://cryptologos.cc/logos/tether-usdt-logo.svg">
+                                <img src="https://cryptologos.cc/logos/tether-usdt-logo.svg" class="token-icon">
+                                <span>Tether</span>
+                            </div>
+                            <div class="token-option" data-token="BNB" data-icon="https://cryptologos.cc/logos/bnb-bnb-logo.svg">
+                                <img src="https://cryptologos.cc/logos/bnb-bnb-logo.svg" class="token-icon">
+                                <span>BNB</span>
+                            </div>
+                            <div class="token-option" data-token="TRX" data-icon="https://cryptologos.cc/logos/tron-trx-logo.svg">
+                                <img src="https://cryptologos.cc/logos/tron-trx-logo.svg" class="token-icon">
+                                <span>TRON</span>
+                            </div>
+                            <div class="token-option" data-token="XRP" data-icon="https://cryptologos.cc/logos/xrp-xrp-logo.svg">
+                                <img src="https://cryptologos.cc/logos/xrp-xrp-logo.svg" class="token-icon">
+                                <span>XRP</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Swap Button -->
+            <div class="flex justify-center my-2">
+                <button class="p-2 bg-green-600 rounded-full hover:bg-green-700 transition transform hover:scale-105 text-white">
+                    <i class="fas fa-arrow-down text-xl"></i>
+                </button>
+            </div>
+
+            <!-- To Token -->
+            <div class="token-input rounded-xl p-4 mb-4 bg-white border border-green-200">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-sm text-green-600">To</span>
+                    <span class="text-sm">Balance: 0.0</span>
+                </div>
+                <div class="flex items-center justify-between">
+                    <input type="number" placeholder="0.0" class="bg-transparent text-2xl w-full outline-none" id="toAmount">
+                    <div class="relative">
+                        <button class="flex items-center bg-green-600/30 px-3 py-2 rounded-lg text-green-800" id="toTokenButton">
+                            <img src="https://cryptologos.cc/logos/tether-usdt-logo.svg" class="selected-token-icon" id="toTokenIcon">
+                            <span id="toToken">USDT</span>
+                            <i class="fas fa-chevron-down ml-2"></i>
+                        </button>
+                        <div class="token-dropdown" id="toTokenDropdown">
+                            <div class="token-option" data-token="ETH" data-icon="https://cryptologos.cc/logos/ethereum-eth-logo.svg">
+                                <img src="https://cryptologos.cc/logos/ethereum-eth-logo.svg" class="token-icon">
+                                <span>Ethereum</span>
+                            </div>
+                            <div class="token-option" data-token="BTC" data-icon="https://cryptologos.cc/logos/bitcoin-btc-logo.svg">
+                                <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.svg" class="token-icon">
+                                <span>Bitcoin</span>
+                            </div>
+                            <div class="token-option" data-token="USDT" data-icon="https://cryptologos.cc/logos/tether-usdt-logo.svg">
+                                <img src="https://cryptologos.cc/logos/tether-usdt-logo.svg" class="token-icon">
+                                <span>Tether</span>
+                            </div>
+                            <div class="token-option" data-token="BNB" data-icon="https://cryptologos.cc/logos/bnb-bnb-logo.svg">
+                                <img src="https://cryptologos.cc/logos/bnb-bnb-logo.svg" class="token-icon">
+                                <span>BNB</span>
+                            </div>
+                            <div class="token-option" data-token="TRX" data-icon="https://cryptologos.cc/logos/tron-trx-logo.svg">
+                                <img src="https://cryptologos.cc/logos/tron-trx-logo.svg" class="token-icon">
+                                <span>TRON</span>
+                            </div>
+                            <div class="token-option" data-token="XRP" data-icon="https://cryptologos.cc/logos/xrp-xrp-logo.svg">
+                                <img src="https://cryptologos.cc/logos/xrp-xrp-logo.svg" class="token-icon">
+                                <span>XRP</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Exchange Rate Info -->
+            <div class="text-sm text-gray-500 mb-6 flex justify-between items-center px-2" id="exchangeRateInfo">
+                <span id="rateSummary">0 ETH = 0 USDT</span>
+                <span class="flex items-center">
+                    <i class="fas fa-gas-pump text-gray-400 mr-1"></i>
+                    <span>No fee</span>
+                </span>
+            </div>
+
+            <!-- Swap Button -->
+            <button class="w-full ghost-button py-4 rounded-xl font-bold text-lg transition" id="swapButton">
+                Swap Now
+            </button>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 w-full max-w-4xl">
+            <div class="bg-green-100 rounded-xl p-6 text-center border border-green-200">
+                <div class="text-3xl font-bold mb-2 text-green-800">$12.5M</div>
+                <div class="text-green-600">Total Value Locked</div>
+            </div>
+            <div class="bg-green-100 rounded-xl p-6 text-center border border-green-200">
+                <div class="text-3xl font-bold mb-2 text-green-800">24,589</div>
+                <div class="text-green-600">Transactions</div>
+            </div>
+            <div class="bg-green-100 rounded-xl p-6 text-center border border-green-200">
+                <div class="text-3xl font-bold mb-2 text-green-800">1,254</div>
+                <div class="text-green-600">Active Users</div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="container mx-auto px-4 py-8 mt-12 border-t border-green-200 bg-white">
+        <div class="flex flex-col md:flex-row justify-between items-center">
+            <div class="flex items-center space-x-2 mb-4 md:mb-0">
+                <span class="text-lg font-medium">Cryptonest</span>
+            </div>
+            <div class="flex space-x-6">
+                <a href="#" class="hover:text-green-600 transition"><i class="fab fa-twitter text-xl"></i></a>
+                <a href="#" class="hover:text-green-600 transition"><i class="fab fa-telegram text-xl"></i></a>
+                <a href="#" class="hover:text-green-600 transition"><i class="fab fa-discord text-xl"></i></a>
+                <a href="#" class="hover:text-green-600 transition"><i class="fab fa-medium text-xl"></i></a>
+                <a href="#" class="hover:text-green-600 transition"><i class="fab fa-github text-xl"></i></a>
+            </div>
+        </div>
+        <div class="mt-8 text-center text-sm text-green-600">
+            © 2023 Cryptonest. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        // Token data with sample prices (in USD)
+        const tokenPrices = {
+            ETH: 1800.00,
+            BTC: 30000.00,
+            USDT: 1.00,
+            BNB: 240.00,
+            TRX: 0.08,
+            XRP: 0.50
+        };
+
+        // Initialize token dropdowns
+        document.querySelectorAll('[id$="TokenButton"]').forEach(button => {
+            const dropdownId = button.id.replace('Button', 'Dropdown');
+            const dropdown = document.getElementById(dropdownId);
+            
+            button.addEventListener('click', (e) => {
+                e.stopPropagation();
+                document.querySelectorAll('.token-dropdown').forEach(d => {
+                    if (d.id !== dropdownId) d.classList.remove('show');
+                });
+                dropdown.classList.toggle('show');
+            });
+        });
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', () => {
+            document.querySelectorAll('.token-dropdown').forEach(dropdown => {
+                dropdown.classList.remove('show');
+            });
+        });
+
+        // Token selection
+        document.querySelectorAll('.token-option').forEach(option => {
+            option.addEventListener('click', function() {
+                const token = this.getAttribute('data-token');
+                const icon = this.getAttribute('data-icon');
+                const dropdown = this.closest('.token-dropdown');
+                const isFromToken = dropdown.id === 'fromTokenDropdown';
+                
+                if (isFromToken) {
+                    document.getElementById('fromToken').textContent = token;
+                    document.getElementById('fromTokenIcon').src = icon;
+                } else {
+                    document.getElementById('toToken').textContent = token;
+                    document.getElementById('toTokenIcon').src = icon;
+                }
+                
+                dropdown.classList.remove('show');
+                updateExchangeRate();
+                updateRateSummary();
+            });
+        });
+
+        // Input amount handling
+        document.getElementById('fromAmount').addEventListener('input', function() {
+            updateExchangeRate();
+            calculateToAmount();
+            updateRateSummary();
+        });
+
+        // Update the rate summary showing both amounts
+        function updateRateSummary() {
+            const fromAmount = parseFloat(document.getElementById('fromAmount').value) || 0;
+            const toAmount = parseFloat(document.getElementById('toAmount').value) || 0;
+            const fromToken = document.getElementById('fromToken').textContent;
+            const toToken = document.getElementById('toToken').textContent;
+            
+            document.getElementById('rateSummary').textContent = 
+                `${fromAmount} ${fromToken} = ${toAmount} ${toToken}`;
+        }
+
+        // Calculate exchange rate and update display
+        function updateExchangeRate() {
+            const fromToken = document.getElementById('fromToken').textContent;
+            const toToken = document.getElementById('toToken').textContent;
+            
+            if (fromToken && toToken) {
+                const rate = (tokenPrices[fromToken] / tokenPrices[toToken]).toFixed(5);
+                // The rate is now used for calculations but not displayed directly
+            }
+        }
+
+        // Calculate the "to" amount based on input
+        function calculateToAmount() {
+            const fromAmount = parseFloat(document.getElementById('fromAmount').value) || 0;
+            const fromToken = document.getElementById('fromToken').textContent;
+            const toToken = document.getElementById('toToken').textContent;
+            
+            if (fromToken && toToken) {
+                const rate = tokenPrices[fromToken] / tokenPrices[toToken];
+                const toAmount = (fromAmount * rate).toFixed(5);
+                document.getElementById('toAmount').value = toAmount;
+            }
+        }
+
+        // Initial exchange rate calculation
+        updateExchangeRate();
+        updateRateSummary();
+
+        // Swap button animation
+        document.querySelector('.fa-arrow-down').parentElement.addEventListener('click', function() {
+            this.classList.add('animate-spin');
+            setTimeout(() => {
+                this.classList.remove('animate-spin');
+            }, 500);
+        });
+    </script>
+</body>
+</html>
