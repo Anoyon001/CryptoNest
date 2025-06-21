@@ -6,6 +6,11 @@
     <title>Cryptonest - Decentralized Exchange</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.7.8/dist/umd/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/web3modal@1.9.10/dist/index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/evm-chains@0.2.0/dist/umd/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
     <style>
         @keyframes pulse {
             0%, 100% { opacity: 1; }
@@ -65,25 +70,29 @@
             cursor: not-allowed !important;
             opacity: 0.7 !important;
         }
+        .wallet-connected {
+            background-color: #22c55e !important;
+            color: white !important;
+        }
     </style>
 </head>
 <body class="min-h-screen bg-white text-gray-800 font-sans">
     <!-- Header -->
-    <header class="container mx-auto px-4 py-6 flex justify-between items-center">
-        <div class="flex items-center space-x-2">
-            <h1 class="text-2xl font-bold">Cryptonest</h1>
+    <header class="container mx-auto px-4 py-6">
+        <div class="flex flex-col items-center">
+            <h1 class="text-3xl font-bold mb-4">Cryptonest</h1>
+            <button id="connectWalletBtn" class="bg-green-600 hover:bg-green-700 px-6 py-2 rounded-full font-medium transition text-white">
+                Connect Wallet
+            </button>
         </div>
-        <nav class="hidden md:flex space-x-6">
+        <nav class="hidden md:flex justify-center space-x-6 mt-4">
             <a href="#" class="hover:text-green-600 transition">Swap</a>
             <a href="#" class="hover:text-green-600 transition">Liquidity</a>
             <a href="#" class="hover:text-green-600 transition">Farms</a>
             <a href="#" class="hover:text-green-600 transition">Analytics</a>
         </nav>
-        <button class="md:hidden text-2xl">
+        <button class="md:hidden text-2xl absolute top-6 right-4">
             <i class="fas fa-bars"></i>
-        </button>
-        <button class="hidden md:block bg-green-600 hover:bg-green-700 px-4 py-2 rounded-full font-medium transition text-white">
-            Connect Wallet
         </button>
     </header>
 
@@ -113,33 +122,33 @@
                     <input type="number" placeholder="0.0" class="bg-transparent text-2xl w-full outline-none" id="fromAmount">
                     <div class="relative">
                         <button class="flex items-center space-x-2 bg-green-600/30 px-3 py-2 rounded-lg text-green-800" id="fromTokenButton">
-                            <img src="https://cryptologos.cc/logos/ethereum-eth-logo.svg" class="selected-token-icon" id="fromTokenIcon">
+                            <img src="https://cryptologos.cc/logos/ethereum-eth-logo.png" class="selected-token-icon" id="fromTokenIcon">
                             <span id="fromToken">ETH</span>
                             <i class="fas fa-chevron-down"></i>
                         </button>
                         <div class="token-dropdown" id="fromTokenDropdown">
-                            <div class="token-option" data-token="ETH" data-icon="https://cryptologos.cc/logos/ethereum-eth-logo.svg">
-                                <img src="https://cryptologos.cc/logos/ethereum-eth-logo.svg" class="token-icon">
+                            <div class="token-option" data-token="ETH" data-icon="https://cryptologos.cc/logos/ethereum-eth-logo.png">
+                                <img src="https://cryptologos.cc/logos/ethereum-eth-logo.png" class="token-icon">
                                 <span>Ethereum</span>
                             </div>
-                            <div class="token-option" data-token="BTC" data-icon="https://cryptologos.cc/logos/bitcoin-btc-logo.svg">
-                                <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.svg" class="token-icon">
+                            <div class="token-option" data-token="BTC" data-icon="https://cryptologos.cc/logos/bitcoin-btc-logo.png">
+                                <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.png" class="token-icon">
                                 <span>Bitcoin</span>
                             </div>
-                            <div class="token-option" data-token="USDT" data-icon="https://cryptologos.cc/logos/tether-usdt-logo.svg">
-                                <img src="https://cryptologos.cc/logos/tether-usdt-logo.svg" class="token-icon">
+                            <div class="token-option" data-token="USDT" data-icon="https://cryptologos.cc/logos/tether-usdt-logo.png">
+                                <img src="https://cryptologos.cc/logos/tether-usdt-logo.png" class="token-icon">
                                 <span>Tether</span>
                             </div>
-                            <div class="token-option" data-token="BNB" data-icon="https://cryptologos.cc/logos/bnb-bnb-logo.svg">
-                                <img src="https://cryptologos.cc/logos/bnb-bnb-logo.svg" class="token-icon">
+                            <div class="token-option" data-token="BNB" data-icon="https://cryptologos.cc/logos/bnb-bnb-logo.png">
+                                <img src="https://cryptologos.cc/logos/bnb-bnb-logo.png" class="token-icon">
                                 <span>BNB</span>
                             </div>
-                            <div class="token-option" data-token="TRX" data-icon="https://cryptologos.cc/logos/tron-trx-logo.svg">
-                                <img src="https://cryptologos.cc/logos/tron-trx-logo.svg" class="token-icon">
+                            <div class="token-option" data-token="TRX" data-icon="https://cryptologos.cc/logos/tron-trx-logo.png">
+                                <img src="https://cryptologos.cc/logos/tron-trx-logo.png" class="token-icon">
                                 <span>TRON</span>
                             </div>
-                            <div class="token-option" data-token="XRP" data-icon="https://cryptologos.cc/logos/xrp-xrp-logo.svg">
-                                <img src="https://cryptologos.cc/logos/xrp-xrp-logo.svg" class="token-icon">
+                            <div class="token-option" data-token="XRP" data-icon="https://cryptologos.cc/logos/xrp-xrp-logo.png">
+                                <img src="https://cryptologos.cc/logos/xrp-xrp-logo.png" class="token-icon">
                                 <span>XRP</span>
                             </div>
                         </div>
@@ -164,33 +173,33 @@
                     <input type="number" placeholder="0.0" class="bg-transparent text-2xl w-full outline-none" id="toAmount">
                     <div class="relative">
                         <button class="flex items-center bg-green-600/30 px-3 py-2 rounded-lg text-green-800" id="toTokenButton">
-                            <img src="https://cryptologos.cc/logos/tether-usdt-logo.svg" class="selected-token-icon" id="toTokenIcon">
+                            <img src="https://cryptologos.cc/logos/tether-usdt-logo.png" class="selected-token-icon" id="toTokenIcon">
                             <span id="toToken">USDT</span>
                             <i class="fas fa-chevron-down ml-2"></i>
                         </button>
                         <div class="token-dropdown" id="toTokenDropdown">
-                            <div class="token-option" data-token="ETH" data-icon="https://cryptologos.cc/logos/ethereum-eth-logo.svg">
-                                <img src="https://cryptologos.cc/logos/ethereum-eth-logo.svg" class="token-icon">
+                            <div class="token-option" data-token="ETH" data-icon="https://cryptologos.cc/logos/ethereum-eth-logo.png">
+                                <img src="https://cryptologos.cc/logos/ethereum-eth-logo.png" class="token-icon">
                                 <span>Ethereum</span>
                             </div>
-                            <div class="token-option" data-token="BTC" data-icon="https://cryptologos.cc/logos/bitcoin-btc-logo.svg">
-                                <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.svg" class="token-icon">
+                            <div class="token-option" data-token="BTC" data-icon="https://cryptologos.cc/logos/bitcoin-btc-logo.png">
+                                <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.png" class="token-icon">
                                 <span>Bitcoin</span>
                             </div>
-                            <div class="token-option" data-token="USDT" data-icon="https://cryptologos.cc/logos/tether-usdt-logo.svg">
-                                <img src="https://cryptologos.cc/logos/tether-usdt-logo.svg" class="token-icon">
+                            <div class="token-option" data-token="USDT" data-icon="https://cryptologos.cc/logos/tether-usdt-logo.png">
+                                <img src="https://cryptologos.cc/logos/tether-usdt-logo.png" class="token-icon">
                                 <span>Tether</span>
                             </div>
-                            <div class="token-option" data-token="BNB" data-icon="https://cryptologos.cc/logos/bnb-bnb-logo.svg">
-                                <img src="https://cryptologos.cc/logos/bnb-bnb-logo.svg" class="token-icon">
+                            <div class="token-option" data-token="BNB" data-icon="https://cryptologos.cc/logos/bnb-bnb-logo.png">
+                                <img src="https://cryptologos.cc/logos/bnb-bnb-logo.png" class="token-icon">
                                 <span>BNB</span>
                             </div>
-                            <div class="token-option" data-token="TRX" data-icon="https://cryptologos.cc/logos/tron-trx-logo.svg">
-                                <img src="https://cryptologos.cc/logos/tron-trx-logo.svg" class="token-icon">
+                            <div class="token-option" data-token="TRX" data-icon="https://cryptologos.cc/logos/tron-trx-logo.png">
+                                <img src="https://cryptologos.cc/logos/tron-trx-logo.png" class="token-icon">
                                 <span>TRON</span>
                             </div>
-                            <div class="token-option" data-token="XRP" data-icon="https://cryptologos.cc/logos/xrp-xrp-logo.svg">
-                                <img src="https://cryptologos.cc/logos/xrp-xrp-logo.svg" class="token-icon">
+                            <div class="token-option" data-token="XRP" data-icon="https://cryptologos.cc/logos/xrp-xrp-logo.png">
+                                <img src="https://cryptologos.cc/logos/xrp-xrp-logo.png" class="token-icon">
                                 <span>XRP</span>
                             </div>
                         </div>
@@ -356,6 +365,113 @@
                 this.classList.remove('animate-spin');
             }, 500);
         });
+
+        // Wallet Connection Logic
+        const connectWalletBtn = document.getElementById('connectWalletBtn');
+        let web3;
+        let provider;
+        let selectedAccount;
+
+        // Web3Modal configuration
+        const providerOptions = {
+            walletconnect: {
+                package: WalletConnectProvider,
+                options: {
+                    rpc: {
+                        1: "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
+                        56: "https://bsc-dataseed.binance.org/",
+                        137: "https://polygon-rpc.com/"
+                    }
+                }
+            },
+            binancechainwallet: {
+                package: true
+            }
+        };
+
+        const web3Modal = new Web3Modal({
+            cacheProvider: true,
+            providerOptions,
+            theme: "light"
+        });
+
+        // Connect wallet function
+        async function connectWallet() {
+            try {
+                provider = await web3Modal.connect();
+                web3 = new Web3(provider);
+                
+                // Subscribe to accounts change
+                provider.on("accountsChanged", (accounts) => {
+                    selectedAccount = accounts[0];
+                    updateWalletButton();
+                });
+
+                // Subscribe to chainId change
+                provider.on("chainChanged", (chainId) => {
+                    window.location.reload();
+                });
+
+                // Subscribe to provider disconnection
+                provider.on("disconnect", (error) => {
+                    console.log(error);
+                    disconnectWallet();
+                });
+
+                // Get accounts
+                const accounts = await web3.eth.getAccounts();
+                selectedAccount = accounts[0];
+                
+                updateWalletButton();
+                
+                // You can now use web3 to interact with the blockchain
+                console.log("Connected to wallet:", selectedAccount);
+                
+            } catch (error) {
+                console.error("Could not connect to wallet:", error);
+            }
+        }
+
+        // Disconnect wallet function
+        function disconnectWallet() {
+            if (provider && provider.close) {
+                provider.close();
+            }
+            web3 = null;
+            provider = null;
+            selectedAccount = null;
+            updateWalletButton();
+            web3Modal.clearCachedProvider();
+        }
+
+        // Update wallet button UI
+        function updateWalletButton() {
+            if (selectedAccount) {
+                const shortenedAddress = `${selectedAccount.substring(0, 6)}...${selectedAccount.substring(38)}`;
+                connectWalletBtn.textContent = shortenedAddress;
+                connectWalletBtn.classList.add('wallet-connected');
+                connectWalletBtn.removeEventListener('click', connectWallet);
+                connectWalletBtn.addEventListener('click', disconnectWallet);
+            } else {
+                connectWalletBtn.textContent = "Connect Wallet";
+                connectWalletBtn.classList.remove('wallet-connected');
+                connectWalletBtn.removeEventListener('click', disconnectWallet);
+                connectWalletBtn.addEventListener('click', connectWallet);
+            }
+        }
+
+        // Check if wallet is already connected
+        async function checkConnectedWallet() {
+            if (web3Modal.cachedProvider) {
+                await connectWallet();
+            }
+        }
+
+        // Initialize wallet connection
+        connectWalletBtn.addEventListener('click', connectWallet);
+        
+        // Check for cached provider on page load
+        window.addEventListener('load', checkConnectedWallet);
     </script>
 </body>
 </html>
