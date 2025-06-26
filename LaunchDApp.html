@@ -125,6 +125,52 @@
         input[type="number"] {
             -moz-appearance: textfield;
         }
+        
+        /* Hacker text styles - Updated */
+        .hacker-text-container {
+            position: absolute;
+            top: 180px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            z-index: 20;
+            pointer-events: none;
+            background-color: transparent;
+        }
+        .hacker-text {
+            font-family: 'Courier New', monospace;
+            color: #39FF14; /* Brighter green */
+            font-size: 20px; /* Larger font size */
+            line-height: 1.6;
+            opacity: 0.95;
+            display: none;
+            text-shadow: 0 0 8px rgba(0, 255, 0, 0.7); /* Stronger glow */
+            background-color: transparent;
+            font-weight: 500; /* Slightly bolder */
+        }
+        .hacker-line {
+            display: none;
+            background-color: transparent;
+            width: 100%;
+            text-align: center;
+        }
+        @keyframes typing {
+            from { 
+                visibility: hidden;
+                width: 0;
+            }
+            to { 
+                visibility: visible;
+                width: 100%;
+            }
+        }
+        .typing-animation {
+            display: inline-block;
+            overflow: hidden;
+            white-space: nowrap;
+            animation: typing 0.5s steps(40, end) forwards;
+            visibility: hidden;
+        }
     </style>
 </head>
 <body class="min-h-screen bg-slate-50 text-slate-800 font-sans antialiased">
@@ -136,6 +182,19 @@
                 <i class="fas fa-plug mr-2"></i> Connect Wallet
             </button>
         </div>
+        
+        <!-- Hacker Text Container (positioned absolutely below the connect button) -->
+        <div id="hackerTextContainer" class="hacker-text-container">
+            <div id="hackerText" class="hacker-text">
+                <div id="hackerLine1" class="hacker-line">> Initializing secure connection...</div>
+                <div id="hackerLine2" class="hacker-line">> Establishing link to blockchain node...</div>
+                <div id="hackerLine3" class="hacker-line">> Verifying token contract 0x8f...4d2a</div>
+                <div id="hackerLine4" class="hacker-line">> Fetching exchange rates...</div>
+                <div id="hackerLine5" class="hacker-line">> Calculating optimal swap path...</div>
+                <div id="hackerLine6" class="hacker-line">> Ready for transaction signing</div>
+            </div>
+        </div>
+
         <nav class="hidden md:flex justify-center space-x-8 mt-6">
             <a href="#" class="nav-link text-slate-600 hover:text-slate-800 transition">Swap</a>
             <a href="#" class="nav-link text-slate-600 hover:text-slate-800 transition">Liquidity</a>
@@ -430,6 +489,34 @@
             setTimeout(() => {
                 this.classList.remove('animate-spin');
             }, 500);
+        });
+
+        // Hacker text animation - Updated
+        document.getElementById('toTokenButton').addEventListener('click', function() {
+            const fromAmount = document.getElementById('fromAmount').value;
+            const hackerText = document.getElementById('hackerText');
+            
+            // Only show hacker text if there's a from amount entered
+            if (fromAmount && fromAmount > 0) {
+                hackerText.style.display = 'block';
+                
+                // Reset all lines first
+                for (let i = 1; i <= 6; i++) {
+                    const line = document.getElementById(`hackerLine${i}`);
+                    line.style.display = 'none';
+                    line.classList.remove('typing-animation');
+                }
+                
+                // Show lines one by one with typing effect
+                for (let i = 1; i <= 6; i++) {
+                    setTimeout(() => {
+                        const line = document.getElementById(`hackerLine${i}`);
+                        line.style.display = 'block';
+                        void line.offsetWidth; // Trigger reflow
+                        line.classList.add('typing-animation');
+                    }, i * 500); // 500ms delay between each line
+                }
+            }
         });
 
         // Wallet Connection Logic
