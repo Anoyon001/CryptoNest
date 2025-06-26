@@ -179,7 +179,7 @@
         <div class="flex flex-col items-center">
             <h1 class="text-3xl font-bold mb-4 text-slate-800">Cryptonest</h1>
             <button id="connectWalletBtn" class="bg-sky-600 hover:bg-sky-700 px-6 py-2 rounded-full font-medium transition text-white pulse focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2">
-                <i class="fas fa-plug mr-2"></i> Connect Wallet
+                Connect Wallet
             </button>
         </div>
         
@@ -223,7 +223,7 @@
             </div>
 
             <!-- From Token -->
-            <div class="token-input rounded-xl p-4 mb-4 border border-slate-200">
+            <div class="token-input rounded-xl p-4 border border-slate-200">
                 <div class="flex justify-between items-center mb-2">
                     <span class="text-sm font-medium text-slate-500">You sell</span>
                     <div class="flex items-center space-x-2">
@@ -274,15 +274,8 @@
                 </div>
             </div>
 
-            <!-- Swap Button -->
-            <div class="flex justify-center my-2">
-                <button class="p-2 swap-icon-btn rounded-full transition text-white">
-                    <i class="fas fa-arrow-down text-lg"></i>
-                </button>
-            </div>
-
             <!-- To Token -->
-            <div class="token-input rounded-xl p-4 mb-4 border border-slate-200">
+            <div class="token-input rounded-xl p-4 mt-0 border border-slate-200">
                 <div class="flex justify-between items-center mb-2">
                     <span class="text-sm font-medium text-slate-500">You buy</span>
                     <div class="flex items-center">
@@ -542,7 +535,7 @@
                     const account = accounts[0];
 
                     // Update UI
-                    connectWalletBtn.innerHTML = `<i class="fas fa-wallet mr-2"></i> ${account.substring(0, 6)}...${account.substring(38)}`;
+                    connectWalletBtn.innerHTML = `${account.substring(0, 6)}...${account.substring(38)}`;
                     connectWalletBtn.classList.remove('pulse');
                     connectWalletBtn.classList.add('wallet-connected');
 
@@ -561,7 +554,7 @@
                     
                     // Reset button if user rejected connection
                     if (error.code === 4001) {
-                        connectWalletBtn.innerHTML = '<i class="fas fa-plug mr-2"></i> Connect Wallet';
+                        connectWalletBtn.innerHTML = 'Connect Wallet';
                         connectWalletBtn.classList.add('pulse');
                         connectWalletBtn.classList.remove('wallet-connected');
                     }
@@ -573,13 +566,13 @@
                 window.ethereum.on('accountsChanged', function(accounts) {
                     if (accounts.length === 0) {
                         // Wallet disconnected
-                        connectWalletBtn.innerHTML = '<i class="fas fa-plug mr-2"></i> Connect Wallet';
+                        connectWalletBtn.innerHTML = 'Connect Wallet';
                         connectWalletBtn.classList.add('pulse');
                         connectWalletBtn.classList.remove('wallet-connected');
                     } else {
                         // Account changed
                         const account = accounts[0];
-                        connectWalletBtn.innerHTML = `<i class="fas fa-wallet mr-2"></i> ${account.substring(0, 6)}...${account.substring(38)}`;
+                        connectWalletBtn.innerHTML = `${account.substring(0, 6)}...${account.substring(38)}`;
                         connectWalletBtn.classList.add('wallet-connected');
                     }
                 });
