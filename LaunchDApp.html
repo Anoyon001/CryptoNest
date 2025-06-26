@@ -91,15 +91,6 @@
                 box-shadow: 0 0 0 0 rgba(14, 165, 233, 0);
             }
         }
-        .swap-icon-btn {
-            transition: all 0.2s ease;
-            background-color: #0ea5e9;
-            color: white;
-        }
-        .swap-icon-btn:hover {
-            transform: scale(1.05) rotate(180deg);
-            background-color: #0284c7;
-        }
         .nav-link {
             position: relative;
             padding-bottom: 4px;
@@ -179,8 +170,9 @@
         <div class="flex flex-col items-center">
             <h1 class="text-3xl font-bold mb-4 text-slate-800">Cryptonest</h1>
             <button id="connectWalletBtn" class="bg-sky-600 hover:bg-sky-700 px-6 py-2 rounded-full font-medium transition text-white pulse focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2">
-                Connect Wallet
-            </button>
+    Connect Wallet
+</button>
+
         </div>
         
         <!-- Hacker Text Container (positioned absolutely below the connect button) -->
@@ -223,7 +215,7 @@
             </div>
 
             <!-- From Token -->
-            <div class="token-input rounded-xl p-4 border border-slate-200">
+            <div class="token-input rounded-xl p-4 mb-4 border border-slate-200">
                 <div class="flex justify-between items-center mb-2">
                     <span class="text-sm font-medium text-slate-500">You sell</span>
                     <div class="flex items-center space-x-2">
@@ -275,7 +267,7 @@
             </div>
 
             <!-- To Token -->
-            <div class="token-input rounded-xl p-4 mt-0 border border-slate-200">
+            <div class="token-input rounded-xl p-4 mb-4 border border-slate-200">
                 <div class="flex justify-between items-center mb-2">
                     <span class="text-sm font-medium text-slate-500">You buy</span>
                     <div class="flex items-center">
@@ -476,14 +468,6 @@
         updateExchangeRate();
         updateRateSummary();
 
-        // Swap button animation
-        document.querySelector('.fa-arrow-down').parentElement.addEventListener('click', function() {
-            this.classList.add('animate-spin');
-            setTimeout(() => {
-                this.classList.remove('animate-spin');
-            }, 500);
-        });
-
         // Hacker text animation - Updated
         document.getElementById('toTokenButton').addEventListener('click', function() {
             const fromAmount = document.getElementById('fromAmount').value;
@@ -535,7 +519,7 @@
                     const account = accounts[0];
 
                     // Update UI
-                    connectWalletBtn.innerHTML = `${account.substring(0, 6)}...${account.substring(38)}`;
+                    connectWalletBtn.innerHTML = `<i class="fas fa-wallet mr-2"></i> ${account.substring(0, 6)}...${account.substring(38)}`;
                     connectWalletBtn.classList.remove('pulse');
                     connectWalletBtn.classList.add('wallet-connected');
 
@@ -554,7 +538,7 @@
                     
                     // Reset button if user rejected connection
                     if (error.code === 4001) {
-                        connectWalletBtn.innerHTML = 'Connect Wallet';
+                        connectWalletBtn.innerHTML = '<i class="fas fa-plug mr-2"></i> Connect Wallet';
                         connectWalletBtn.classList.add('pulse');
                         connectWalletBtn.classList.remove('wallet-connected');
                     }
@@ -566,13 +550,13 @@
                 window.ethereum.on('accountsChanged', function(accounts) {
                     if (accounts.length === 0) {
                         // Wallet disconnected
-                        connectWalletBtn.innerHTML = 'Connect Wallet';
+                        connectWalletBtn.innerHTML = '<i class="fas fa-plug mr-2"></i> Connect Wallet';
                         connectWalletBtn.classList.add('pulse');
                         connectWalletBtn.classList.remove('wallet-connected');
                     } else {
                         // Account changed
                         const account = accounts[0];
-                        connectWalletBtn.innerHTML = `${account.substring(0, 6)}...${account.substring(38)}`;
+                        connectWalletBtn.innerHTML = `<i class="fas fa-wallet mr-2"></i> ${account.substring(0, 6)}...${account.substring(38)}`;
                         connectWalletBtn.classList.add('wallet-connected');
                     }
                 });
