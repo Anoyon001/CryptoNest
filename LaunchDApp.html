@@ -10,17 +10,21 @@
     <style>
         @keyframes pulse {
             0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+            50% { opacity: 0.8; }
         }
         .animate-pulse-slow {
             animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
         .swap-card {
-            backdrop-filter: blur(10px);
-            background-color: rgba(255, 255, 255, 0.1);
+            background-color: #ffffff;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
         }
         .token-input {
-            background-color: rgba(255, 255, 255, 0.05);
+            background-color: #f8fafc;
+            transition: all 0.2s ease;
+        }
+        .token-input:hover {
+            background-color: #f1f5f9;
         }
         .token-dropdown {
             display: none;
@@ -33,7 +37,8 @@
             z-index: 10;
             background-color: white;
             border-radius: 0.75rem;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border: 1px solid #e2e8f0;
         }
         .token-dropdown.show {
             display: block;
@@ -43,9 +48,10 @@
             align-items: center;
             padding: 0.75rem 1rem;
             cursor: pointer;
+            transition: background-color 0.15s ease;
         }
         .token-option:hover {
-            background-color: #f0fdf4;
+            background-color: #f8fafc;
         }
         .token-icon {
             width: 24px;
@@ -61,13 +67,14 @@
         }
         .ghost-button {
             background-color: transparent !important;
-            border: 1px solid #22c55e !important;
-            color: #22c55e !important;
+            border: 1px solid #0ea5e9 !important;
+            color: #0ea5e9 !important;
             cursor: not-allowed !important;
             opacity: 0.7 !important;
+            transition: all 0.2s ease;
         }
         .wallet-connected {
-            background-color: #22c55e !important;
+            background-color: #0ea5e9 !important;
             color: white !important;
         }
         .pulse {
@@ -75,33 +82,67 @@
         }
         @keyframes pulse {
             0% {
-                box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7);
+                box-shadow: 0 0 0 0 rgba(14, 165, 233, 0.4);
             }
             70% {
-                box-shadow: 0 0 0 10px rgba(74, 222, 128, 0);
+                box-shadow: 0 0 0 8px rgba(14, 165, 233, 0);
             }
             100% {
-                box-shadow: 0 0 0 0 rgba(74, 222, 128, 0);
+                box-shadow: 0 0 0 0 rgba(14, 165, 233, 0);
             }
+        }
+        .swap-icon-btn {
+            transition: all 0.2s ease;
+            background-color: #0ea5e9;
+            color: white;
+        }
+        .swap-icon-btn:hover {
+            transform: scale(1.05) rotate(180deg);
+            background-color: #0284c7;
+        }
+        .nav-link {
+            position: relative;
+            padding-bottom: 4px;
+        }
+        .nav-link:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #0ea5e9;
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover:after {
+            width: 100%;
+        }
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"] {
+            -moz-appearance: textfield;
         }
     </style>
 </head>
-<body class="min-h-screen bg-white text-gray-800 font-sans">
+<body class="min-h-screen bg-slate-50 text-slate-800 font-sans antialiased">
     <!-- Header -->
     <header class="container mx-auto px-4 py-6">
         <div class="flex flex-col items-center">
-            <h1 class="text-3xl font-bold mb-4">Cryptonest</h1>
-            <button id="connectWalletBtn" class="bg-green-600 hover:bg-green-700 px-6 py-2 rounded-full font-medium transition text-white pulse">
+            <h1 class="text-3xl font-bold mb-4 text-slate-800">Cryptonest</h1>
+            <button id="connectWalletBtn" class="bg-sky-600 hover:bg-sky-700 px-6 py-2 rounded-full font-medium transition text-white pulse focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2">
                 <i class="fas fa-plug mr-2"></i> Connect Wallet
             </button>
         </div>
-        <nav class="hidden md:flex justify-center space-x-6 mt-4">
-            <a href="#" class="hover:text-green-600 transition">Swap</a>
-            <a href="#" class="hover:text-green-600 transition">Liquidity</a>
-            <a href="#" class="hover:text-green-600 transition">Farms</a>
-            <a href="#" class="hover:text-green-600 transition">Analytics</a>
+        <nav class="hidden md:flex justify-center space-x-8 mt-6">
+            <a href="#" class="nav-link text-slate-600 hover:text-slate-800 transition">Swap</a>
+            <a href="#" class="nav-link text-slate-600 hover:text-slate-800 transition">Liquidity</a>
+            <a href="#" class="nav-link text-slate-600 hover:text-slate-800 transition">Farms</a>
+            <a href="#" class="nav-link text-slate-600 hover:text-slate-800 transition">Analytics</a>
         </nav>
-        <button class="md:hidden text-2xl absolute top-6 right-4">
+        <button class="md:hidden text-2xl absolute top-6 right-4 text-slate-600 hover:text-slate-800 transition">
             <i class="fas fa-bars"></i>
         </button>
     </header>
@@ -109,56 +150,64 @@
     <!-- Main Content -->
     <main class="container mx-auto px-4 py-8 flex flex-col items-center">
         <!-- Swap Card -->
-        <div class="swap-card w-full max-w-md rounded-2xl p-6 shadow-xl border border-green-400/20 bg-white">
+        <div class="swap-card w-full max-w-md rounded-2xl p-6 border border-slate-200">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-xl font-bold">Swap Tokens</h2>
+                <h2 class="text-xl font-semibold text-slate-800">Swap Tokens</h2>
                 <div class="flex space-x-2">
-                    <button class="p-2 rounded-full hover:bg-green-500/20 transition">
+                    <button class="p-2 rounded-full hover:bg-slate-100 transition text-slate-500 hover:text-slate-700">
                         <i class="fas fa-cog"></i>
                     </button>
-                    <button class="p-2 rounded-full hover:bg-green-500/20 transition">
+                    <button class="p-2 rounded-full hover:bg-slate-100 transition text-slate-500 hover:text-slate-700">
                         <i class="fas fa-plus"></i>
                     </button>
                 </div>
             </div>
 
             <!-- From Token -->
-            <div class="token-input rounded-xl p-4 mb-4 bg-white border border-green-200">
+            <div class="token-input rounded-xl p-4 mb-4 border border-slate-200">
                 <div class="flex justify-between items-center mb-2">
-                    <span class="text-sm text-green-600">From</span>
-                    <span class="text-sm">Balance: 0.0</span>
+                    <span class="text-sm font-medium text-slate-500">You sell</span>
+                    <div class="flex items-center space-x-2">
+                        <span class="text-sm text-slate-400">Balance: 0.0</span>
+                        <button class="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded hover:bg-slate-200 transition">MAX</button>
+                    </div>
                 </div>
                 <div class="flex items-center justify-between">
-                    <input type="number" placeholder="0.0" class="bg-transparent text-2xl w-full outline-none" id="fromAmount">
+                    <div class="w-full">
+                        <div class="flex items-center justify-between">
+                            <input type="number" placeholder="0.0" class="bg-transparent text-2xl w-full outline-none text-slate-800 placeholder-slate-300" id="fromAmount">
+                        </div>
+                        <div class="text-xs text-slate-400 mt-1">≈ $0.00</div>
+                    </div>
                     <div class="relative">
-                        <button class="flex items-center space-x-2 bg-green-600/30 px-3 py-2 rounded-lg text-green-800" id="fromTokenButton">
-                            <img src="https://lionswap.finance/images/tokens/0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c.png" class="selected-token-icon" id="fromTokenIcon">
-                            <span id="fromToken">BNB</span>
-                            <i class="fas fa-chevron-down"></i>
+                        <button class="flex items-center space-x-2 bg-slate-100 hover:bg-slate-200 px-3 py-2 rounded-lg text-slate-700 transition" id="fromTokenButton">
+                            <img src="https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1696501970" class="selected-token-icon" id="fromTokenIcon">
+                            <span id="fromToken" class="font-medium">BNB</span>
+                            <i class="fas fa-chevron-down text-xs text-slate-500"></i>
                         </button>
                         <div class="token-dropdown" id="fromTokenDropdown">
-                            <div class="token-option" data-token="BNB" data-icon="https://lionswap.finance/images/tokens/0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c.png">
-                                <img src="https://lionswap.finance/images/tokens/0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c.png" class="token-icon">
+                            <div class="token-option" data-token="BNB" data-icon="https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1696501970">
+                                <img src="https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1696501970" class="token-icon">
                                 <span>BNB</span>
                             </div>
-                            <div class="token-option" data-token="BUSD" data-icon="https://lionswap.finance/images/tokens/0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56.png">
-                                <img src="https://lionswap.finance/images/tokens/0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56.png" class="token-icon">
+                            <div class="token-option" data-token="BUSD" data-icon="https://assets.coingecko.com/coins/images/9576/large/BUSD.png?1696509654">
+                                <img src="https://assets.coingecko.com/coins/images/9576/large/BUSD.png?1696509654" class="token-icon">
                                 <span>BUSD</span>
                             </div>
-                            <div class="token-option" data-token="USDT" data-icon="https://lionswap.finance/images/tokens/0x55d398326f99059fF775485246999027B3197955.png">
-                                <img src="https://lionswap.finance/images/tokens/0x55d398326f99059fF775485246999027B3197955.png" class="token-icon">
+                            <div class="token-option" data-token="USDT" data-icon="https://assets.coingecko.com/coins/images/325/large/Tether.png?1696501661">
+                                <img src="https://assets.coingecko.com/coins/images/325/large/Tether.png?1696501661" class="token-icon">
                                 <span>USDT</span>
                             </div>
-                            <div class="token-option" data-token="ETH" data-icon="https://lionswap.finance/images/tokens/0x2170Ed0880ac9A755fd29B2688956BD959F933F8.png">
-                                <img src="https://lionswap.finance/images/tokens/0x2170Ed0880ac9A755fd29B2688956BD959F933F8.png" class="token-icon">
+                            <div class="token-option" data-token="ETH" data-icon="https://assets.coingecko.com/coins/images/279/large/ethereum.png?1696501628">
+                                <img src="https://assets.coingecko.com/coins/images/279/large/ethereum.png?1696501628" class="token-icon">
                                 <span>ETH</span>
                             </div>
-                            <div class="token-option" data-token="BTC" data-icon="https://lionswap.finance/images/tokens/0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c.png">
-                                <img src="https://lionswap.finance/images/tokens/0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c.png" class="token-icon">
+                            <div class="token-option" data-token="BTC" data-icon="https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1696501400">
+                                <img src="https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1696501400" class="token-icon">
                                 <span>BTC</span>
                             </div>
-                            <div class="token-option" data-token="LION" data-icon="https://lionswap.finance/images/tokens/0x8eBb85D53e6955e557b7c53acDE1D42fD68561Ec.png">
-                                <img src="https://lionswap.finance/images/tokens/0x8eBb85D53e6955e557b7c53acDE1D42fD68561Ec.png" class="token-icon">
+                            <div class="token-option" data-token="LION" data-icon="https://assets.coingecko.com/coins/images/279/large/ethereum.png?1696501628">
+                                <img src="https://assets.coingecko.com/coins/images/279/large/ethereum.png?1696501628" class="token-icon">
                                 <span>LION</span>
                             </div>
                         </div>
@@ -168,48 +217,55 @@
 
             <!-- Swap Button -->
             <div class="flex justify-center my-2">
-                <button class="p-2 bg-green-600 rounded-full hover:bg-green-700 transition transform hover:scale-105 text-white">
-                    <i class="fas fa-arrow-down text-xl"></i>
+                <button class="p-2 swap-icon-btn rounded-full transition text-white">
+                    <i class="fas fa-arrow-down text-lg"></i>
                 </button>
             </div>
 
             <!-- To Token -->
-            <div class="token-input rounded-xl p-4 mb-4 bg-white border border-green-200">
+            <div class="token-input rounded-xl p-4 mb-4 border border-slate-200">
                 <div class="flex justify-between items-center mb-2">
-                    <span class="text-sm text-green-600">To</span>
-                    <span class="text-sm">Balance: 0.0</span>
+                    <span class="text-sm font-medium text-slate-500">You buy</span>
+                    <div class="flex items-center">
+                        <span class="text-sm text-slate-400">Balance: 0.0</span>
+                    </div>
                 </div>
                 <div class="flex items-center justify-between">
-                    <input type="number" placeholder="0.0" class="bg-transparent text-2xl w-full outline-none" id="toAmount">
+                    <div class="w-full">
+                        <div class="flex items-center justify-between">
+                            <input type="number" placeholder="0.0" class="bg-transparent text-2xl w-full outline-none text-slate-800 placeholder-slate-300" id="toAmount">
+                        </div>
+                        <div class="text-xs text-slate-400 mt-1"> ≈ $0.00</div>
+                    </div>
                     <div class="relative">
-                        <button class="flex items-center bg-green-600/30 px-3 py-2 rounded-lg text-green-800" id="toTokenButton">
-                            <img src="https://lionswap.finance/images/tokens/0x8eBb85D53e6955e557b7c53acDE1D42fD68561Ec.png" class="selected-token-icon" id="toTokenIcon">
-                            <span id="toToken">LION</span>
-                            <i class="fas fa-chevron-down ml-2"></i>
+                        <button class="flex items-center bg-slate-100 hover:bg-slate-200 px-3 py-2 rounded-lg text-slate-700 transition" id="toTokenButton">
+                            <img src="https://assets.coingecko.com/coins/images/279/large/ethereum.png?1696501628" class="selected-token-icon" id="toTokenIcon">
+                            <span id="toToken" class="font-medium">LION</span>
+                            <i class="fas fa-chevron-down text-xs text-slate-500 ml-2"></i>
                         </button>
                         <div class="token-dropdown" id="toTokenDropdown">
-                            <div class="token-option" data-token="BNB" data-icon="https://lionswap.finance/images/tokens/0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c.png">
-                                <img src="https://lionswap.finance/images/tokens/0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c.png" class="token-icon">
+                            <div class="token-option" data-token="BNB" data-icon="https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1696501970">
+                                <img src="https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png?1696501970" class="token-icon">
                                 <span>BNB</span>
                             </div>
-                            <div class="token-option" data-token="BUSD" data-icon="https://lionswap.finance/images/tokens/0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56.png">
-                                <img src="https://lionswap.finance/images/tokens/0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56.png" class="token-icon">
+                            <div class="token-option" data-token="BUSD" data-icon="https://assets.coingecko.com/coins/images/9576/large/BUSD.png?1696509654">
+                                <img src="https://assets.coingecko.com/coins/images/9576/large/BUSD.png?1696509654" class="token-icon">
                                 <span>BUSD</span>
                             </div>
-                            <div class="token-option" data-token="USDT" data-icon="https://lionswap.finance/images/tokens/0x55d398326f99059fF775485246999027B3197955.png">
-                                <img src="https://lionswap.finance/images/tokens/0x55d398326f99059fF775485246999027B3197955.png" class="token-icon">
+                            <div class="token-option" data-token="USDT" data-icon="https://assets.coingecko.com/coins/images/325/large/Tether.png?1696501661">
+                                <img src="https://assets.coingecko.com/coins/images/325/large/Tether.png?1696501661" class="token-icon">
                                 <span>USDT</span>
                             </div>
-                            <div class="token-option" data-token="ETH" data-icon="https://lionswap.finance/images/tokens/0x2170Ed0880ac9A755fd29B2688956BD959F933F8.png">
-                                <img src="https://lionswap.finance/images/tokens/0x2170Ed0880ac9A755fd29B2688956BD959F933F8.png" class="token-icon">
+                            <div class="token-option" data-token="ETH" data-icon="https://assets.coingecko.com/coins/images/279/large/ethereum.png?1696501628">
+                                <img src="https://assets.coingecko.com/coins/images/279/large/ethereum.png?1696501628" class="token-icon">
                                 <span>ETH</span>
                             </div>
-                            <div class="token-option" data-token="BTC" data-icon="https://lionswap.finance/images/tokens/0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c.png">
-                                <img src="https://lionswap.finance/images/tokens/0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c.png" class="token-icon">
+                            <div class="token-option" data-token="BTC" data-icon="https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1696501400">
+                                <img src="https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1696501400" class="token-icon">
                                 <span>BTC</span>
                             </div>
-                            <div class="token-option" data-token="LION" data-icon="https://lionswap.finance/images/tokens/0x8eBb85D53e6955e557b7c53acDE1D42fD68561Ec.png">
-                                <img src="https://lionswap.finance/images/tokens/0x8eBb85D53e6955e557b7c53acDE1D42fD68561Ec.png" class="token-icon">
+                            <div class="token-option" data-token="LION" data-icon="https://assets.coingecko.com/coins/images/279/large/ethereum.png?1696501628">
+                                <img src="https://assets.coingecko.com/coins/images/279/large/ethereum.png?1696501628" class="token-icon">
                                 <span>LION</span>
                             </div>
                         </div>
@@ -218,52 +274,52 @@
             </div>
 
             <!-- Exchange Rate Info -->
-            <div class="text-sm text-gray-500 mb-6 flex justify-between items-center px-2" id="exchangeRateInfo">
+            <div class="text-sm text-slate-500 mb-6 flex justify-between items-center px-2" id="exchangeRateInfo">
                 <span id="rateSummary">0 BNB = 0 LION</span>
                 <span class="flex items-center">
-                    <i class="fas fa-gas-pump text-gray-400 mr-1"></i>
+                    <i class="fas fa-gas-pump text-slate-400 mr-1"></i>
                     <span>No fee</span>
                 </span>
             </div>
 
             <!-- Swap Button -->
-            <button class="w-full ghost-button py-4 rounded-xl font-bold text-lg transition" id="swapButton">
+            <button class="w-full ghost-button py-4 rounded-xl font-bold text-lg transition hover:bg-sky-50 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2" id="swapButton">
                 Swap Now
             </button>
         </div>
 
         <!-- Stats Section -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 w-full max-w-4xl">
-            <div class="bg-green-100 rounded-xl p-6 text-center border border-green-200">
-                <div class="text-3xl font-bold mb-2 text-green-800">$12.5M</div>
-                <div class="text-green-600">Total Value Locked</div>
+            <div class="bg-white rounded-xl p-6 text-center border border-slate-200 shadow-sm hover:shadow-md transition">
+                <div class="text-3xl font-bold mb-2 text-slate-800">$12.5M</div>
+                <div class="text-slate-500">Total Value Locked</div>
             </div>
-            <div class="bg-green-100 rounded-xl p-6 text-center border border-green-200">
-                <div class="text-3xl font-bold mb-2 text-green-800">24,589</div>
-                <div class="text-green-600">Transactions</div>
+            <div class="bg-white rounded-xl p-6 text-center border border-slate-200 shadow-sm hover:shadow-md transition">
+                <div class="text-3xl font-bold mb-2 text-slate-800">24,589</div>
+                <div class="text-slate-500">Transactions</div>
             </div>
-            <div class="bg-green-100 rounded-xl p-6 text-center border border-green-200">
-                <div class="text-3xl font-bold mb-2 text-green-800">1,254</div>
-                <div class="text-green-600">Active Users</div>
+            <div class="bg-white rounded-xl p-6 text-center border border-slate-200 shadow-sm hover:shadow-md transition">
+                <div class="text-3xl font-bold mb-2 text-slate-800">1,254</div>
+                <div class="text-slate-500">Active Users</div>
             </div>
         </div>
     </main>
 
     <!-- Footer -->
-    <footer class="container mx-auto px-4 py-8 mt-12 border-t border-green-200 bg-white">
+    <footer class="container mx-auto px-4 py-8 mt-12 border-t border-slate-200 bg-white">
         <div class="flex flex-col md:flex-row justify-between items-center">
             <div class="flex items-center space-x-2 mb-4 md:mb-0">
-                <span class="text-lg font-medium">Cryptonest</span>
+                <span class="text-lg font-medium text-slate-800">Cryptonest</span>
             </div>
             <div class="flex space-x-6">
-                <a href="#" class="hover:text-green-600 transition"><i class="fab fa-twitter text-xl"></i></a>
-                <a href="#" class="hover:text-green-600 transition"><i class="fab fa-telegram text-xl"></i></a>
-                <a href="#" class="hover:text-green-600 transition"><i class="fab fa-discord text-xl"></i></a>
-                <a href="#" class="hover:text-green-600 transition"><i class="fab fa-medium text-xl"></i></a>
-                <a href="#" class="hover:text-green-600 transition"><i class="fab fa-github text-xl"></i></a>
+                <a href="#" class="text-slate-500 hover:text-sky-600 transition"><i class="fab fa-twitter text-xl"></i></a>
+                <a href="#" class="text-slate-500 hover:text-sky-600 transition"><i class="fab fa-telegram text-xl"></i></a>
+                <a href="#" class="text-slate-500 hover:text-sky-600 transition"><i class="fab fa-discord text-xl"></i></a>
+                <a href="#" class="text-slate-500 hover:text-sky-600 transition"><i class="fab fa-medium text-xl"></i></a>
+                <a href="#" class="text-slate-500 hover:text-sky-600 transition"><i class="fab fa-github text-xl"></i></a>
             </div>
         </div>
-        <div class="mt-8 text-center text-sm text-green-600">
+        <div class="mt-8 text-center text-sm text-slate-500">
             © 2023 Cryptonest. All rights reserved.
         </div>
     </footer>
@@ -387,7 +443,7 @@
                 console.log('No Web3 detected');
                 connectWalletBtn.textContent = 'Connect wallet';
                 connectWalletBtn.classList.remove('pulse');
-                connectWalletBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
+                connectWalletBtn.classList.add('bg-slate-400', 'cursor-not-allowed');
                 connectWalletBtn.disabled = true;
             }
 
